@@ -55,6 +55,10 @@ alias xclip='xclip -i -sel clipboard'
 # Sublime
 alias s='subl'
 
+# Claude Code
+alias cr='claude --dangerously-skip-permissions --resume'
+alias c='claude --dangerously-skip-permissions'
+
 # fd-find
 alias fd='fdfind'
 
