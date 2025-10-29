@@ -9,9 +9,9 @@ plugins=(
     ssh-agent
     tmux
     z
-    fzf-tab
     zsh-autosuggestions
     zsh-syntax-highlighting
+    fzf-tab
     zsh-transient-prompt
 )
 
@@ -96,12 +96,12 @@ ZSH_AUTOSUGGEST_HIGHLIGHT_STYLE="fg=#999999"
 
 # fzf
 [[ -f ~/.fzf.zsh ]] && source ~/.fzf.zsh
-#export FZF_DEFAULT_COMMAND="rg --files --follow --hidden --glob '!.git'"
+export FZF_DEFAULT_COMMAND="rg --files --follow --hidden --glob '!.git'"
 export FZF_DEFAULT_COMMAND="fd -HLt f --strip-cwd-prefix -E .git"
-export FZF_DEFAULT_OPTS="--highlight-line --info=inline-right --cycle --border=none"
+export FZF_DEFAULT_OPTS="--info=inline-right --cycle --border=none"
 export FZF_CTRL_R_OPTS="--wrap --height=~30%"
 export FZF_CTRL_T_OPTS="--preview='batcat -n --color=always {}' --height=100% --bind shift-up:preview-page-up,shift-down:preview-page-down"
-#export FZF_TMUX_OPTS="-p"
+export FZF_TMUX_OPTS="-p"
 
 ## Disable completion sorting for special cases
 zstyle ":completion:*:zshz:*" sort false
@@ -110,23 +110,25 @@ zstyle ":completion:*:(ww|Krb5conf_export):*" sort false
 
 ## (fzf-tab)
 ### Fix z broken by fzf-tab
-#zstyle ':fzf-tab:complete:zshz:*' disabled-on any
+zstyle ':fzf-tab:complete:zshz:*' disabled-on any
 ### Ensure colors match by using FZF_DEFAULT_OPTS
 zstyle ":fzf-tab:*" use-fzf-default-opts yes
 ### Preview content when tab completing
-#zstyle ":fzf-tab:complete:ls:*" fzf-preview "ls -p --color=always \${realpath} | grep /"
+zstyle ":fzf-tab:complete:ls:*" fzf-preview "ls -p --color=always \${realpath} | grep /"
 zstyle ":fzf-tab:complete:cd:*" fzf-preview "ls --color=always \${realpath}"
 zstyle ":fzf-tab:complete:(Proxychains_open|Proxychains_export):*" fzf-preview "tail -n 20 \${PROXYCHAINS_DIR}/\${word}.conf | batcat -n --color=always -l conf"
 zstyle ":fzf-tab:complete:(Proxychains_open|Proxychains_export):*" fzf-flags --preview-window=60% --border=none
-#zstyle ":fzf-tab:complete:(Proxychains_open|Proxychains_export):*" popup-min-size 120 0
+zstyle ":fzf-tab:complete:(Proxychains_open|Proxychains_export):*" popup-min-size 120 0
 ### tmux popups
+# Temporarily disabled to debug - may cause issues in WSL
 zstyle ':fzf-tab:*' fzf-command ftb-tmux-popup
 zstyle ':fzf-tab:*' popup-min-size 70 20
 
-# async-git-info
-# if [ "$ZSH_THEME" = "fino" ]; then
-#     source "$ZSH_CUSTOM/plugins/async-git-info/async-git-info.plugin.zsh"
-# fi
+if [ "$ZSH_THEME" = "fino" ]; then
+    if [ -f "$ZSH_CUSTOM/plugins/async-git-info/async-git-info.plugin.zsh" ]; then
+        source "$ZSH_CUSTOM/plugins/async-git-info/async-git-info.plugin.zsh"
+    fi
+fi
 
 # Resolve DOTFILES_DIR
 if [ -d "$HOME/.dotfiles" ]; then
@@ -140,3 +142,5 @@ fi
 for DOTFILE in "$DOTFILES_DIR"/system/*; do
     [ -f "$DOTFILE" ] && . "$DOTFILE"
 done
+export NVM_DIR="$HOME/.nvm"
+[ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"  # This loads nvm
